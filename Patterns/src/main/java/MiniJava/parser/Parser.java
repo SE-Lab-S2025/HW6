@@ -13,6 +13,9 @@ import MiniJava.scanner.lexicalAnalyzer;
 import MiniJava.scanner.token.Token;
 
 public class Parser {
+    private static final String PARSE_TABLE_PATH = "src/main/resources/parseTable";
+    private static final String RULES_PATH = "src/main/resources/Rules";
+
     private ArrayList<Rule> rules;
     private Stack<Integer> parsStack;
     private ParseTable parseTable;
@@ -23,13 +26,13 @@ public class Parser {
         parsStack = new Stack<Integer>();
         parsStack.push(0);
         try {
-            parseTable = new ParseTable(Files.readAllLines(Paths.get("src/main/resources/parseTable")).get(0));
+            parseTable = new ParseTable(Files.readAllLines(Paths.get(PARSE_TABLE_PATH)).get(0));
         } catch (Exception e) {
             e.printStackTrace();
         }
         rules = new ArrayList<Rule>();
         try {
-            for (String stringRule : Files.readAllLines(Paths.get("src/main/resources/Rules"))) {
+            for (String stringRule : Files.readAllLines(Paths.get(RULES_PATH))) {
                 rules.add(new Rule(stringRule));
             }
         } catch (IOException e) {

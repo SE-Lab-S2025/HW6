@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Stack;
 
 import MiniJava.Log.Log;
@@ -25,20 +27,30 @@ public class Parser {
     public Parser() {
         parsStack = new Stack<Integer>();
         parsStack.push(0);
+        this.parseTable = initializeParseTable();
+        this.rules = initializeRules();
+        cg = new CodeGenerator();
+    }
+
+    private ParseTable initializeParseTable() {
         try {
-            parseTable = new ParseTable(Files.readAllLines(Paths.get(PARSE_TABLE_PATH)).get(0));
+            return new ParseTable(Files.readAllLines(Paths.get(PARSE_TABLE_PATH)).get(0));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        rules = new ArrayList<Rule>();
+        return null;
+    }
+
+    private ArrayList<Rule> initializeRules() {
+        ArrayList<Rule> initRules = new ArrayList<Rule>();
         try {
             for (String stringRule : Files.readAllLines(Paths.get(RULES_PATH))) {
-                rules.add(new Rule(stringRule));
+                initRules.add(new Rule(stringRule));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        cg = new CodeGenerator();
+        return initRules;
     }
 
     public void startParse(java.util.Scanner sc) {

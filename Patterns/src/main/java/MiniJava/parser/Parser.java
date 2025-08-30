@@ -58,6 +58,7 @@ public class Parser {
     }
 
     public void startParse(java.util.Scanner sc) {
+        ParserActionFactory factory = new ParserActionFactory(this.rules);
         this.setLexicalAnalyzer(new lexicalAnalyzer(sc));
         this.setLookAhead(lexicalAnalyzer.getNextToken());
         this.setFinished(false);
@@ -68,31 +69,9 @@ public class Parser {
                 this.setCurrentAction(this.getParseTable().getActionTable(this.getParsStack().peek(), this.getLookAhead()));
                 Log.print(this.getCurrentAction().toString());
 
-                switch (getCurrentAction().action) {
-                    case shift:
-                        this.getParsStack().push(this.getCurrentAction().number);
-                        this.setLookAhead(this.getLexicalAnalyzer().getNextToken());
+                ParserAction parserAction = factory.from(this.getCurrentAction());
+                parserAction.execute(this);
 
-                        break;
-                    case reduce:
-                        Rule rule = this.getRules().get(this.getCurrentAction().number);
-                        for (int i = 0; i < rule.RHS.size(); i++) {
-                            this.getParsStack().pop();
-                        }
-
-                        Log.print(/*"state : " +*/ this.getParsStack().peek() + "\t" + rule.LHS);
-                        this.getParsStack().push(this.getParseTable().getGotoTable(this.getParsStack().peek(), rule.LHS));
-                        Log.print(/*"new State : " + */this.getParsStack().peek() + "");
-                        try {
-                            this.getCodeGenerator().semanticFunction(rule.semanticAction, this.getLookAhead());
-                        } catch (Exception e) {
-                            Log.print("Code Genetator Error");
-                        }
-                        break;
-                    case accept:
-                        this.setFinished(true);
-                        break;
-                }
                 Log.print("");
             } catch (Exception ignored) {
                 ignored.printStackTrace();

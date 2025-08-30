@@ -58,39 +58,39 @@ public class Parser {
     }
 
     public void startParse(java.util.Scanner sc) {
-        this.lexicalAnalyzer = new lexicalAnalyzer(sc);
-        this.lookAhead = lexicalAnalyzer.getNextToken();
-        this.isFinished = false;
+        this.setLexicalAnalyzer(new lexicalAnalyzer(sc));
+        this.setLookAhead(lexicalAnalyzer.getNextToken());
+        this.setFinished(false);
 
-        while (!isFinished) {
+        while (!this.isFinished()) {
             try {
-                Log.print(/*"lookahead : "+*/ lookAhead.toString() + "\t" + parsStack.peek());
-                currentAction = parseTable.getActionTable(parsStack.peek(), lookAhead);
-                Log.print(currentAction.toString());
+                Log.print(/*"lookahead : "+*/ this.getLookAhead().toString() + "\t" + this.getParsStack().peek());
+                this.setCurrentAction(this.getParseTable().getActionTable(this.getParsStack().peek(), this.getLookAhead()));
+                Log.print(this.getCurrentAction().toString());
 
-                switch (currentAction.action) {
+                switch (getCurrentAction().action) {
                     case shift:
-                        parsStack.push(currentAction.number);
-                        lookAhead = lexicalAnalyzer.getNextToken();
+                        this.getParsStack().push(this.getCurrentAction().number);
+                        this.setLookAhead(this.getLexicalAnalyzer().getNextToken());
 
                         break;
                     case reduce:
-                        Rule rule = rules.get(currentAction.number);
+                        Rule rule = this.getRules().get(this.getCurrentAction().number);
                         for (int i = 0; i < rule.RHS.size(); i++) {
-                            parsStack.pop();
+                            this.getParsStack().pop();
                         }
 
-                        Log.print(/*"state : " +*/ parsStack.peek() + "\t" + rule.LHS);
-                        parsStack.push(parseTable.getGotoTable(parsStack.peek(), rule.LHS));
-                        Log.print(/*"new State : " + */parsStack.peek() + "");
+                        Log.print(/*"state : " +*/ this.getParsStack().peek() + "\t" + rule.LHS);
+                        this.getParsStack().push(this.getParseTable().getGotoTable(this.getParsStack().peek(), rule.LHS));
+                        Log.print(/*"new State : " + */this.getParsStack().peek() + "");
                         try {
-                            codeGenerator.semanticFunction(rule.semanticAction, lookAhead);
+                            this.getCodeGenerator().semanticFunction(rule.semanticAction, this.getLookAhead());
                         } catch (Exception e) {
                             Log.print("Code Genetator Error");
                         }
                         break;
                     case accept:
-                        isFinished = true;
+                        this.setFinished(true);
                         break;
                 }
                 Log.print("");
@@ -98,6 +98,6 @@ public class Parser {
                 ignored.printStackTrace();
             }
         }
-        if (!ErrorHandler.hasError) codeGenerator.printMemory();
+        if (!ErrorHandler.hasError) this.getCodeGenerator().printMemory();
     }
 }

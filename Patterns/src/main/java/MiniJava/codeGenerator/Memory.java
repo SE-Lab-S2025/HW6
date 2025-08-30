@@ -20,17 +20,32 @@ public class Memory {
         lastDataAddress = stratDataMemoryAddress;
     }
 
-    public int getTemp() {
+    //Query methods
+    public int calculateNextTempAddress() {
+        return lastTempIndex;
+    }
+
+    public int calculateNextDataAddress() {
+        return lastDataAddress;
+    }
+
+    public int calculateNextCodeBlockIndex() {
+        return codeBlock.size();
+    }
+
+    public int allocateTemp() {
+        int address = lastTempIndex;
         lastTempIndex += tempSize;
-        return lastTempIndex - tempSize;
+        return address;
     }
 
-    public int getDateAddress() {
+    public int allocateData() {
+        int address = lastDataAddress;
         lastDataAddress += dataSize;
-        return lastDataAddress - dataSize;
+        return address;
     }
 
-    public int saveMemory() {
+    public int reserveCodeBlockSlot() {
         codeBlock.add(new _3AddressCode());
         return codeBlock.size() - 1;
     }

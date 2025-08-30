@@ -244,7 +244,7 @@ public class CodeGenerator {
                 t = varType.Bool;
                 break;
         }
-        Address temp = new Address(memory.getTemp(), t);
+        Address temp = new Address(memory.allocateTemp(), t);
         ss.push(temp);
         memory.add3AddressCode(Operation.ASSIGN, new Address(temp.num, varType.Address, TypeAddress.Imidiate), new Address(symbolTable.getMethodReturnAddress(className, methodName), varType.Address), null);
         memory.add3AddressCode(Operation.ASSIGN, new Address(memory.getCurrentCodeBlockAddress() + 2, varType.Address, TypeAddress.Imidiate), new Address(symbolTable.getMethodCallerAddress(className, methodName), varType.Address), null);
@@ -299,7 +299,7 @@ public class CodeGenerator {
     }
 
     public void add() {
-        Address temp = new Address(memory.getTemp(), varType.Int);
+        Address temp = new Address(memory.allocateTemp(), varType.Int);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
 
@@ -311,7 +311,7 @@ public class CodeGenerator {
     }
 
     public void sub() {
-        Address temp = new Address(memory.getTemp(), varType.Int);
+        Address temp = new Address(memory.allocateTemp(), varType.Int);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
         if (s1.varType != varType.Int || s2.varType != varType.Int) {
@@ -322,7 +322,7 @@ public class CodeGenerator {
     }
 
     public void mult() {
-        Address temp = new Address(memory.getTemp(), varType.Int);
+        Address temp = new Address(memory.allocateTemp(), varType.Int);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
         if (s1.varType != varType.Int || s2.varType != varType.Int) {
@@ -338,7 +338,7 @@ public class CodeGenerator {
     }
 
     public void save() {
-        ss.push(new Address(memory.saveMemory(), varType.Address));
+        ss.push(new Address(memory.reserveCodeBlockSlot(), varType.Address));
     }
 
     public void _while() {
@@ -347,7 +347,7 @@ public class CodeGenerator {
     }
 
     public void jpf_save() {
-        Address save = new Address(memory.saveMemory(), varType.Address);
+        Address save = new Address(memory.reserveCodeBlockSlot(), varType.Address);
         memory.add3AddressCode(ss.pop().num, Operation.JPF, ss.pop(), new Address(memory.getCurrentCodeBlockAddress(), varType.Address), null);
         ss.push(save);
     }
@@ -361,7 +361,7 @@ public class CodeGenerator {
     }
 
     public void equal() {
-        Address temp = new Address(memory.getTemp(), varType.Bool);
+        Address temp = new Address(memory.allocateTemp(), varType.Bool);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
         if (s1.varType != s2.varType) {
@@ -372,7 +372,7 @@ public class CodeGenerator {
     }
 
     public void less_than() {
-        Address temp = new Address(memory.getTemp(), varType.Bool);
+        Address temp = new Address(memory.allocateTemp(), varType.Bool);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
         if (s1.varType != varType.Int || s2.varType != varType.Int) {
@@ -383,7 +383,7 @@ public class CodeGenerator {
     }
 
     public void and() {
-        Address temp = new Address(memory.getTemp(), varType.Bool);
+        Address temp = new Address(memory.allocateTemp(), varType.Bool);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
         if (s1.varType != varType.Bool || s2.varType != varType.Bool) {
@@ -394,7 +394,7 @@ public class CodeGenerator {
     }
 
     public void not() {
-        Address temp = new Address(memory.getTemp(), varType.Bool);
+        Address temp = new Address(memory.allocateTemp(), varType.Bool);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
         if (s1.varType != varType.Bool) {

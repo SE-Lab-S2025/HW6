@@ -1,22 +1,22 @@
 # گزارش بازآرایی‌های انجام شده
-
-### **Facade**
+<ul dir="rtl">
+<li> facade:
 با ایجاد یک واسط ساده و یکپارچه برای تعامل تابع main با سایر بخش‌ها، پیچیدگی را از دید کاربر پنهان می‌کنیم.
 
-### **Replace Temp with Query**
+<li>Replace Temp with Query:
   جایگزین کردن متغیرهای موقت با فراخوانی متد، وابستگی‌های غیرضروری را حذف و قابلیت استفاده مجدد کد را افزایش می‌دهد.
 
-### **Separate Query from Modifier**
+<li>Separate Query from Modifier:
 تفکیک کردن متد‌هایی که هم پرس و جو و هم تغییر وضعیت می‌دهند به دو متد مجزا  
 
-### **Replace Conditional with Polymorphism**
+<li>Replace Conditional with Polymorphism:
 در کلاس parser سوئیچ کیس را با چندریختی جایگزین می‌کنیم.
 
-### **Self Encapsulate Field**
+<li>Self Encapsulate Field:
 با کپسوله‌سازی فیلدها حتی در داخل خود کلاس، کنترل بیشتری روی دسترسی به داده‌ها اعمال می‌کنیم.
 در کلاس parser موارد نقض این تکنیک برطرف شدند.
 
-### **Extract Method**
+<li>Extract Method:
 جداسازی بلوک‌های کد به متدهای مستقل، خوانایی و قابلیت استفاده مجدد کد را بهبود می‌بخشد.
 برای افزایش خوانایی کد در کلاس parser و Token متدهایی را اضافه کردیم.
-
+</ul>

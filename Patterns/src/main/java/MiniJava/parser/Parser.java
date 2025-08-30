@@ -11,7 +11,10 @@ import MiniJava.codeGenerator.CodeGenerator;
 import MiniJava.errorHandler.ErrorHandler;
 import MiniJava.scanner.lexicalAnalyzer;
 import MiniJava.scanner.token.Token;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 public class Parser {
     private static final String PARSE_TABLE_PATH = "src/main/resources/parseTable";
     private static final String RULES_PATH = "src/main/resources/Rules";
@@ -21,10 +24,13 @@ public class Parser {
     private ParseTable parseTable;
     private lexicalAnalyzer lexicalAnalyzer;
     private CodeGenerator codeGenerator;
+    private Token lookAhead;
+    private boolean isFinished;
+    private Action currentAction;
 
     public Parser() {
-        parsStack = new Stack<>();
-        parsStack.push(0);
+        this.parsStack = new Stack<>();
+        this.parsStack.push(0);
         this.parseTable = initializeParseTable();
         this.rules = initializeRules();
         this.codeGenerator = new CodeGenerator();
@@ -52,12 +58,11 @@ public class Parser {
     }
 
     public void startParse(java.util.Scanner sc) {
-        lexicalAnalyzer = new lexicalAnalyzer(sc);
-        Token lookAhead = lexicalAnalyzer.getNextToken();
-        boolean finish = false;
-        Action currentAction;
+        this.lexicalAnalyzer = new lexicalAnalyzer(sc);
+        this.lookAhead = lexicalAnalyzer.getNextToken();
+        this.isFinished = false;
 
-        while (!finish) {
+        while (!isFinished) {
             try {
                 Log.print(/*"lookahead : "+*/ lookAhead.toString() + "\t" + parsStack.peek());
                 currentAction = parseTable.getActionTable(parsStack.peek(), lookAhead);
@@ -85,7 +90,7 @@ public class Parser {
                         }
                         break;
                     case accept:
-                        finish = true;
+                        isFinished = true;
                         break;
                 }
                 Log.print("");
